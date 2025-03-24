@@ -11,15 +11,15 @@ import { baseUrl } from './sitemap'
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: 'Catia Malinina Blog',
-    template: '%s | Catia Malinina Blog',
+    default: 'Catia Malinina',
+    template: '%s | Catia Malinina',
   },
   description: 'Building the best pregnancy planning protocol ever. Share what I learn along the way. N=1',
   openGraph: {
-    title: 'Catia Malinina Blog',
+    title: 'Catia Malinina',
     description: 'Building the best pregnancy planning protocol ever. Share what I learn along the way. N=1',
     url: baseUrl,
-    siteName: 'Catia Malinina Blog',
+    siteName: 'Catia Malinina',
     locale: 'en_US',
     type: 'website',
   },
