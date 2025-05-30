@@ -115,6 +115,10 @@ html {
   @apply list-decimal pl-6;
 }
 
+.prose li {
+  @apply mb-6
+}
+
 .prose > :first-child {
   /* Override removing top margin, causing layout shift */
   margin-top: 1.25em !important;

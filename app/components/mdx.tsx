@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { highlight } from 'sugar-high'
 import React from 'react'
+import { ArrowIcon } from './footer'
 
 function Table({ data }) {
   let headers = data.headers.map((header, index) => (
@@ -41,7 +42,12 @@ function CustomLink(props) {
     return <a {...props} />
   }
 
-  return <a target="_blank" rel="noopener noreferrer" {...props} />
+  return (
+    <Link target="_blank" rel="noopener noreferrer" {...props} className='flex items-center gap-1'>
+      {props.children}
+      <ArrowIcon />
+    </Link>
+  );
 }
 
 function RoundedImage(props) {
