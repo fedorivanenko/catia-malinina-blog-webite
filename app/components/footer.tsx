@@ -26,7 +26,7 @@ export default function Footer() {
             target="_blank"
             href="https://x.com/catiamalinina"
           >
-            <p className="ml-2">X</p>
+            <p>X</p>
             <ArrowIcon />
           </a>
         </li>
