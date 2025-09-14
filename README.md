@@ -1,42 +1,50 @@
-# Portfolio Blog Starter
+# Catia Malinina Blog Monorepo
 
-This is a porfolio site template complete with a blog. Includes:
+This is a Turbo-powered monorepo containing Catia Malinina's blog applications.
 
-- MDX and Markdown support
-- Optimized for SEO (sitemap, robots, JSON-LD schema)
-- RSS Feed
-- Dynamic OG images
-- Syntax highlighting
-- Tailwind v4
-- Vercel Speed Insights / Web Analytics
-- Geist font
+## Structure
 
-## Demo
-
-https://portfolio-blog-starter.vercel.app
-
-## How to Use
-
-You can choose from one of the following two methods to use this repository:
-
-### One-Click Deploy
-
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples):
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/solutions/blog&project-name=blog&repository-name=blog)
-
-### Clone and Deploy
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [pnpm](https://pnpm.io/installation) to bootstrap the example:
-
-```bash
-pnpm create next-app --example https://github.com/vercel/examples/tree/main/solutions/blog blog
+```
+├── apps/
+│   ├── web/          # Next.js blog application
+│   └── studio/       # (Future Sanity Studio)
+├── packages/         # Shared packages (when needed)
+└── turbo.json        # Turbo configuration
 ```
 
-Then, run Next.js in development mode:
+## Getting Started
 
+Install dependencies:
+```bash
+pnpm install
+```
+
+## Development
+
+Run all apps in development mode:
 ```bash
 pnpm dev
 ```
 
-Deploy it to the cloud with [Vercel](https://vercel.com/templates) ([Documentation](https://nextjs.org/docs/app/building-your-application/deploying)).
+Run only the web app:
+```bash
+pnpm --filter @catia-blog/web dev
+```
+
+## Building
+
+Build all apps:
+```bash
+pnpm build
+```
+
+## Other Commands
+
+- `pnpm lint` - Run linting across all apps
+- `pnpm clean` - Clean build artifacts
+- `pnpm format` - Format code with Prettier
+
+## Apps
+
+### Web (`@catia-blog/web`)
+Next.js blog application with MDX support for blog posts.
