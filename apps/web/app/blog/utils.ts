@@ -6,7 +6,7 @@ type Metadata = {
   publishedAt: string
   summary: string
   image?: string
-  published?: string
+  published?: boolean
 }
 
 function parseFrontmatter(fileContent: string) {
@@ -18,17 +18,18 @@ function parseFrontmatter(fileContent: string) {
   let metadata: Partial<Metadata> = {}
 
   frontMatterLines.forEach((line) => {
-    let [key, ...valueArr] = line.split(': ')
-    let value = valueArr.join(': ').trim()
-    value = value.replace(/^['"](.*)['"]$/, '$1') // Remove quotes
-    let keyName = key.trim() as keyof Metadata
-    let normalizedValue: string | boolean = value
-
-    if (value === 'true' || value === 'false') {
-      normalizedValue = value === 'true'
+    const [key, ...valueArr] = line.split(': ')
+    const raw = valueArr.join(': ').trim()
+    const keyName = key.trim() as keyof Metadata
+  
+    const value = raw.replace(/^['"](.*)['"]$/, '$1')
+  
+    if (keyName === "published") {
+      metadata.published = value === "true"
+      return
     }
-
-    metadata[keyName] = normalizedValue as Metadata[keyof Metadata]
+  
+    metadata[keyName] = value
   })
 
   return { metadata: metadata as Metadata, content }
@@ -59,7 +60,7 @@ function getMDXData(dir) {
 
 export function getBlogPosts() {
   return getMDXData(path.join(process.cwd(), 'app', 'blog', 'posts')).filter(
-    (post) => post.metadata.published !== "false"
+    (post) => post.metadata.published !== false
   )
 }
 
