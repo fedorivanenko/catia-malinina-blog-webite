@@ -16,6 +16,9 @@ export default function Page() {
       </p>
       <EmailSignup />
       <div className="my-8">
+        <h2 className="mb-6 text-xl font-semibold tracking-tight">
+          Blog Posts
+        </h2>
         <BlogPosts />
       </div>
     </section>
