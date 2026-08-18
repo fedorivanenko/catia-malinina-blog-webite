@@ -1,3 +1,5 @@
+import { ThemeToggle } from './theme-toggle'
+
 export function ArrowIcon() {
   return (
     <svg
@@ -5,6 +7,7 @@ export function ArrowIcon() {
       height="10"
       viewBox="0 0 12 12"
       fill="none"
+      aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
@@ -31,9 +34,12 @@ export default function Footer() {
           </a>
         </li>
       </ul>
-      <p className="mt-8 text-neutral-600 dark:text-neutral-300">
-        © {new Date().getFullYear()}
-      </p>
+      <div className="mt-8 flex items-center justify-between gap-4">
+        <p className="text-neutral-600 dark:text-neutral-300">
+          © {new Date().getFullYear()}
+        </p>
+        <ThemeToggle />
+      </div>
     </footer>
   )
 }
