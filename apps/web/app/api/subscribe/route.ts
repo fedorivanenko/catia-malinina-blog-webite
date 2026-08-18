@@ -67,20 +67,59 @@ export async function POST(request: Request) {
   })
 
   if (createError?.statusCode === 409) {
-    const { error: segmentError } = await resend.contacts.segments.add({
-      email: emailResult.data,
-      segmentId,
-    })
+    const [contactResult, segmentsResult] = await Promise.all([
+      resend.contacts.get({ email: emailResult.data }),
+      resend.contacts.segments.list({ email: emailResult.data }),
+    ])
 
-    if (!segmentError || segmentError.statusCode === 409) {
+    if (contactResult.error || segmentsResult.error) {
+      console.error(
+        'Resend subscription lookup failed',
+        contactResult.error || segmentsResult.error
+      )
+      return NextResponse.json(
+        { message: 'Could not submit your email. Please try again.' },
+        { status: 502 }
+      )
+    }
+
+    const isInSegment = segmentsResult.data.data.some(
+      (segment) => segment.id === segmentId
+    )
+
+    if (isInSegment && !contactResult.data.unsubscribed) {
       return NextResponse.json({ message: 'Thanks — you’re on the list.' })
     }
 
-    console.error('Resend segment subscription failed', segmentError)
-    return NextResponse.json(
-      { message: 'Could not submit your email. Please try again.' },
-      { status: 502 }
-    )
+    const { error: updateError } = await resend.contacts.update({
+      email: emailResult.data,
+      unsubscribed: false,
+    })
+
+    if (updateError) {
+      console.error('Resend contact resubscription failed', updateError)
+      return NextResponse.json(
+        { message: 'Could not submit your email. Please try again.' },
+        { status: 502 }
+      )
+    }
+
+    if (!isInSegment) {
+      const { error: segmentError } = await resend.contacts.segments.add({
+        email: emailResult.data,
+        segmentId,
+      })
+
+      if (segmentError && segmentError.statusCode !== 409) {
+        console.error('Resend segment subscription failed', segmentError)
+        return NextResponse.json(
+          { message: 'Could not submit your email. Please try again.' },
+          { status: 502 }
+        )
+      }
+    }
+
+    return NextResponse.json({ message: 'Thanks — you’re on the list.' })
   }
 
   if (createError) {
