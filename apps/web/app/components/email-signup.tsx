@@ -51,7 +51,7 @@ export function EmailSignup() {
   }
 
   return (
-    <form className="mt-6" onSubmit={handleSubmit}>
+    <form className="mt-6 max-w-[460px]" onSubmit={handleSubmit}>
       <label className="sr-only" htmlFor="signup-email">
         Email address
       </label>
