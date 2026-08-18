@@ -1,11 +1,8 @@
 {
-    "files": [],
-    "references": [
-      {
-        "path": "./apps/web"
-      },
-      {
-        "path": "./apps/studio"
-      }
-    ]
-  }
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/web"
+    }
+  ]
+}

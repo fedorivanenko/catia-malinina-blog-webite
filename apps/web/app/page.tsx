@@ -10,6 +10,9 @@ export default function Page() {
         {`Building the best preconception protocol ever. N=1`}
       </p>
       <div className="my-8">
+        <h2 className="mb-6 text-xl font-semibold tracking-tight">
+          Blog Posts
+        </h2>
         <BlogPosts />
       </div>
     </section>

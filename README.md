@@ -6,8 +6,7 @@ This is a Turbo-powered monorepo containing Catia Malinina's blog applications.
 
 ```
 ├── apps/
-│   ├── web/          # Next.js blog application
-│   └── studio/       # (Future Sanity Studio)
+│   └── web/          # Next.js blog application
 ├── packages/         # Shared packages (when needed)
 └── turbo.json        # Turbo configuration
 ```
