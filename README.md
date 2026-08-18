@@ -47,3 +47,14 @@ pnpm build
 
 ### Web (`@catia-blog/web`)
 Next.js blog application with MDX support for blog posts.
+
+## Email subscriptions
+
+Create a Resend Segment named `Catia Malinina Blog Subscribers`, then configure:
+
+```bash
+RESEND_API_KEY=          # Full-access key; sending-only keys cannot manage contacts
+RESEND_SEGMENT_ID=       # Segment ID used to label subscribers for Broadcasts
+```
+
+Email signups create Resend Contacts and add them to this Segment.

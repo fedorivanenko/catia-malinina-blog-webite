@@ -49,11 +49,10 @@ export async function POST(request: Request) {
   }
 
   const apiKey = process.env.RESEND_API_KEY
-  const from = process.env.CONTACT_FROM_EMAIL
-  const to = process.env.CONTACT_TO_EMAIL || 'hello@catiamalinina.com'
+  const segmentId = process.env.RESEND_SEGMENT_ID
 
-  if (!apiKey || !from) {
-    console.error('Missing RESEND_API_KEY or CONTACT_FROM_EMAIL')
+  if (!apiKey || !segmentId) {
+    console.error('Missing RESEND_API_KEY or RESEND_SEGMENT_ID')
     return NextResponse.json(
       { message: 'Email signup is unavailable. Please try again later.' },
       { status: 503 }
@@ -61,16 +60,31 @@ export async function POST(request: Request) {
   }
 
   const resend = new Resend(apiKey)
-  const { error } = await resend.emails.send({
-    from,
-    to,
-    replyTo: emailResult.data,
-    subject: 'New email signup',
-    text: `New email signup: ${emailResult.data}`,
+  const { error: createError } = await resend.contacts.create({
+    email: emailResult.data,
+    unsubscribed: false,
+    segments: [{ id: segmentId }],
   })
 
-  if (error) {
-    console.error('Resend email failed', error)
+  if (createError?.statusCode === 409) {
+    const { error: segmentError } = await resend.contacts.segments.add({
+      email: emailResult.data,
+      segmentId,
+    })
+
+    if (!segmentError || segmentError.statusCode === 409) {
+      return NextResponse.json({ message: 'Thanks — you’re on the list.' })
+    }
+
+    console.error('Resend segment subscription failed', segmentError)
+    return NextResponse.json(
+      { message: 'Could not submit your email. Please try again.' },
+      { status: 502 }
+    )
+  }
+
+  if (createError) {
+    console.error('Resend contact subscription failed', createError)
     return NextResponse.json(
       { message: 'Could not submit your email. Please try again.' },
       { status: 502 }
