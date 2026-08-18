@@ -12,6 +12,33 @@ const requestSchema = z
 
 const emailSchema = z.string().email().max(254)
 
+async function sendWelcomeEmail({
+  resend,
+  email,
+  contactId,
+  from,
+  templateId,
+}: {
+  resend: Resend
+  email: string
+  contactId: string
+  from: string
+  templateId: string
+}) {
+  const { error } = await resend.emails.send(
+    {
+      from,
+      to: email,
+      template: { id: templateId },
+    },
+    { idempotencyKey: `newsletter-welcome-${contactId}` }
+  )
+
+  if (error) {
+    console.error('Resend welcome email failed', error)
+  }
+}
+
 export async function POST(request: Request) {
   let body: unknown
 
@@ -50,9 +77,13 @@ export async function POST(request: Request) {
 
   const apiKey = process.env.RESEND_API_KEY
   const segmentId = process.env.RESEND_SEGMENT_ID
+  const from = process.env.CONTACT_FROM_EMAIL
+  const welcomeTemplateId = process.env.RESEND_WELCOME_TEMPLATE_ID
 
-  if (!apiKey || !segmentId) {
-    console.error('Missing RESEND_API_KEY or RESEND_SEGMENT_ID')
+  if (!apiKey || !segmentId || !from || !welcomeTemplateId) {
+    console.error(
+      'Missing RESEND_API_KEY, RESEND_SEGMENT_ID, CONTACT_FROM_EMAIL, or RESEND_WELCOME_TEMPLATE_ID'
+    )
     return NextResponse.json(
       { message: 'Email signup is unavailable. Please try again later.' },
       { status: 503 }
@@ -60,11 +91,12 @@ export async function POST(request: Request) {
   }
 
   const resend = new Resend(apiKey)
-  const { error: createError } = await resend.contacts.create({
-    email: emailResult.data,
-    unsubscribed: false,
-    segments: [{ id: segmentId }],
-  })
+  const { data: createdContact, error: createError } =
+    await resend.contacts.create({
+      email: emailResult.data,
+      unsubscribed: false,
+      segments: [{ id: segmentId }],
+    })
 
   if (createError?.statusCode === 409) {
     const [contactResult, segmentsResult] = await Promise.all([
@@ -119,6 +151,14 @@ export async function POST(request: Request) {
       }
     }
 
+    await sendWelcomeEmail({
+      resend,
+      email: emailResult.data,
+      contactId: contactResult.data.id,
+      from,
+      templateId: welcomeTemplateId,
+    })
+
     return NextResponse.json({ message: 'Thanks — you’re on the list.' })
   }
 
@@ -129,6 +169,14 @@ export async function POST(request: Request) {
       { status: 502 }
     )
   }
+
+  await sendWelcomeEmail({
+    resend,
+    email: emailResult.data,
+    contactId: createdContact.id,
+    from,
+    templateId: welcomeTemplateId,
+  })
 
   return NextResponse.json({ message: 'Thanks — you’re on the list.' })
 }

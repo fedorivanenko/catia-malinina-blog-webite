@@ -53,8 +53,10 @@ Next.js blog application with MDX support for blog posts.
 Create a Resend Segment named `Catia Malinina Blog Subscribers`, then configure:
 
 ```bash
-RESEND_API_KEY=          # Full-access key; sending-only keys cannot manage contacts
-RESEND_SEGMENT_ID=       # Segment ID used to label subscribers for Broadcasts
+RESEND_API_KEY=                             # Full-access key
+RESEND_SEGMENT_ID=                          # Segment used for Broadcasts
+RESEND_WELCOME_TEMPLATE_ID=thanks-for-the-sub
+CONTACT_FROM_EMAIL="Catia Malinina <hello@notification.fedor.studio>"
 ```
 
-Email signups create Resend Contacts and add them to this Segment.
+Email signups create Resend Contacts, add them to this Segment, and send the published welcome Template to new or reactivated subscribers.
