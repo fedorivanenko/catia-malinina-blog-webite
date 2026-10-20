@@ -1,5 +1,3 @@
-import { BlogPosts } from 'app/components/posts'
-
 export default function Page() {
   return (
     <section>
@@ -7,14 +5,8 @@ export default function Page() {
         Catia Malinina
       </h1>
       <p className="mb-4">
-        {`Building the best preconception protocol ever. N=1`}
+        {`I'm an entrepreneur exploring how advances in reproductive biology, computational science, and preventive medicine could change the way we approach human reproduction.`}
       </p>
-      <div className="my-8">
-        <h2 className="mb-6 text-xl font-semibold tracking-tight">
-          Blog Posts
-        </h2>
-        <BlogPosts />
-      </div>
     </section>
   )
 }
